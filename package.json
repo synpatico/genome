@@ -1,6 +1,6 @@
 {
 	"name": "@synpatico/genome",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"description": "Deterministic structure ID generation for JavaScript objects using hierarchical hashing and collision-resistant algorithms",
 	"author": "Michael Sweeney <overthemike@gmail.com>",
 	"type": "module",
@@ -10,7 +10,7 @@
 	"exports": {
 		"./package.json": "./package.json",
 		".": {
-			"require": { 
+			"require": {
 				"types": "./dist/index.d.ts",
 				"default": "./dist/index.cjs"
 			},
