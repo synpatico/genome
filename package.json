@@ -26,6 +26,7 @@
 		"build:types": "tsc --emitDeclarationOnly --declarationMap",
 		"build:js": "tsup",
 		"clean": "rm -rf dist",
+		"lint": "biome",
 		"test": "vitest run",
 		"prepublishOnly": "pnpm run build",
 		"bench": "vitest bench",
@@ -53,6 +54,7 @@
 	},
 	"license": "MIT",
 	"devDependencies": {
+		"@biomejs/biome": "^2.1.4",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@types/benchmark": "^2.1.5",
 		"@types/node": "^22.13.14",
