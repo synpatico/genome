@@ -28,6 +28,7 @@
 		"clean": "rm -rf dist",
 		"lint": "biome",
 		"test": "vitest run",
+		"typecheck": "tsc --noEmit",
 		"prepublishOnly": "pnpm run build",
 		"bench": "vitest bench",
 		"coverage": "vitest run --coverage",
