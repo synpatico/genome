@@ -10,16 +10,16 @@ import { hash, xxHash32 } from "./hash"
  * @private
  */
 const TYPE_BITS: Record<string, bigint> = {
-	root: 0n,
-	number: 1n,
-	string: 2n,
-	boolean: 4n,
-	bigint: 8n,
-	null: 16n,
-	undefined: 32n,
-	symbol: 64n,
-	object: 128n,
-	array: 256n,
+	root: BigInt(0),
+	number: BigInt(1),
+	string: BigInt(2),
+	boolean: BigInt(4),
+	bigint: BigInt(8),
+	null: BigInt(16),
+	undefined: BigInt(32),
+	symbol: BigInt(64),
+	object: BigInt(128),
+	array: BigInt(256),
 }
 
 /**
@@ -152,7 +152,7 @@ export const generateStructureId = (obj: unknown, config?: StructureIdConfig): s
 	const effectiveConfig = config || globalConfig
 
 	if (typeof obj !== "object" || obj === null) {
-		return `L0:${TYPE_BITS[typeof obj] || 0n}-L1:${TYPE_BITS[typeof obj] || 0n}`
+		return `L0:${TYPE_BITS[typeof obj] || BigInt(0)}-L1:${TYPE_BITS[typeof obj] || BigInt(0)}`
 	}
 
 	if (!effectiveConfig?.newIdOnCollision && OBJECT_ID_CACHE.has(obj)) {
@@ -203,12 +203,12 @@ export const generateStructureId = (obj: unknown, config?: StructureIdConfig): s
 	 */
 	const processStructure = (value: unknown, level = 0, path: string[] = []): void => {
 		if (!levelHashes[level]) {
-			levelHashes[level] = 1n << BigInt(level)
+			levelHashes[level] = BigInt(1)<< BigInt(level)
 		}
 
 		const type = getType(value)
 
-		levelHashes[level] += TYPE_BITS[type] || 0n
+		levelHashes[level] += TYPE_BITS[type] || BigInt(0)
 
 		if (type !== "object" && type !== "array") {
 			return
@@ -240,13 +240,13 @@ export const generateStructureId = (obj: unknown, config?: StructureIdConfig): s
 
 					const keys = Object.keys(objValue).sort()
 
-					let multiplier = 1n
+					let multiplier = BigInt(1)
 					for (const key of keys) {
 						const propType = getType(objValue[key])
 						const keyBit = getBit(key)
 						levelHashes[level] += keyBit * multiplier
 
-						levelHashes[level] += (TYPE_BITS[propType] || 0n) * multiplier
+						levelHashes[level] += (TYPE_BITS[propType] || BigInt(0))* multiplier
 
 						multiplier++
 
@@ -258,13 +258,13 @@ export const generateStructureId = (obj: unknown, config?: StructureIdConfig): s
 					const lengthBit = getBit(`length:${arrayValue.length}`)
 					levelHashes[level] += lengthBit
 
-					let multiplier = 1n
+					let multiplier = BigInt(1)
 					for (let i = 0; i < arrayValue.length; i++) {
 						const itemType = getType(arrayValue[i])
 						const indexBit = getBit(`[${i}]`)
 						levelHashes[level] += indexBit * multiplier
 
-						levelHashes[level] += (TYPE_BITS[itemType] || 0n) * multiplier
+						levelHashes[level] += (TYPE_BITS[itemType] || BigInt(0)) * multiplier
 
 						multiplier++
 
@@ -552,12 +552,12 @@ export interface StructureState {
  */
 export function exportStructureState(): StructureState {
 	const keyMap: Record<string, string> = {}
-	for (const [key, value] of GLOBAL_KEY_MAP.entries()) {
+	for (const [key, value] of Object.entries(GLOBAL_KEY_MAP)) {
 		keyMap[key] = value.toString()
 	}
 
 	const collisionCounters: Record<string, number> = {}
-	for (const [signature, count] of STRUCTURE_HASH_COUNTER.entries()) {
+	for (const [signature, count] of Object.entries(STRUCTURE_HASH_COUNTER)) {
 		collisionCounters[signature] = count
 	}
 
@@ -590,7 +590,7 @@ export function importStructureState(state: StructureState): void {
 		STRUCTURE_HASH_COUNTER.set(signature, count)
 	}
 
-	let maxBit = 0n
+	let maxBit = BigInt(0)
 	for (const bitStr of Object.values(state.keyMap)) {
 		const bit = BigInt(bitStr)
 		if (bit > maxBit) {
