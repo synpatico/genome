@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest"
 import { hash, hashFunction, murmurHash3, xxHash32 } from "../src/hash"
+import { hashTestCases } from "./object-definitions"
 
 describe("Hash Functions", () => {
 	// Test the individual hash functions
@@ -130,13 +131,7 @@ describe("Hash Functions", () => {
 
 	// Test for specific expected output values
 	describe("Known hash values", () => {
-		const testCases = [
-			{ input: "", murmur: "0", xx: "2cc5d05" },
-			{ input: "hello", murmur: "248bfa47", xx: "fb0077f9" },
-			{ input: "test123", murmur: "b1cde64d", xx: "ff2410ee" },
-		]
-
-		for (const { input, murmur, xx } of testCases) {
+		for (const { input, murmur, xx } of hashTestCases) {
 			test(`murmurHash3 for "${input}"`, () => {
 				expect(murmurHash3(input)).toBe(murmur)
 			})

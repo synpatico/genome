@@ -5,12 +5,51 @@ import {
 	resetState,
 	setStructureIdConfig,
 } from "../src/index"
+import {
+	countNameObject,
+	countNameDifferentValues,
+	countTitleObject,
+	nameCountObject,
+	countStringNameObject,
+	abcObject,
+	cbaObject,
+	userJohnWithPreferences,
+	userJaneWithPreferences,
+	userJaneWithFontSize,
+	deepNestedObject,
+	deepNestedObjectAlternate,
+	dateObject1,
+	dateObject2,
+	itemsArray123,
+	itemsArray456,
+	itemsArray1234,
+	itemsArrayMixedTypes,
+	usersArrayJohnJane,
+	usersArrayAliceBob,
+	usersArrayMixedStructure,
+	mixedArray1,
+	mixedArray2,
+	simpleObject,
+	shallowObject,
+	mediumNestedObject,
+	objectWithArray,
+	nestedArrayObject,
+	testObjectA,
+	testObjectB,
+	complexNestedObject,
+	simpleTrueObject,
+	simpleFalseObject,
+	firstPropertyObject,
+	firstPropertyFalseObject,
+	secondPropertyObject,
+	secondPropertyFalseObject,
+} from "./object-definitions"
 
 describe("Structure ID Generator", () => {
 	describe("Basic Structure IDs", () => {
 		test("should generate the same ID for objects with identical structure", () => {
-			const obj1 = { count: 0, name: "test" }
-			const obj2 = { count: 42, name: "different" }
+			const obj1 = { ...countNameObject }
+			const obj2 = { ...countNameDifferentValues }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -19,8 +58,8 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should generate different IDs for objects with different structures when using collision handling", () => {
-			const obj1 = { count: 0, name: "test" }
-			const obj2 = { count: 0, title: "test" } // different property name
+			const obj1 = { ...countNameObject }
+			const obj2 = { ...countTitleObject } // different property name
 
 			// Set collision handling to true to get different structures
 			setStructureIdConfig({ newIdOnCollision: true })
@@ -36,8 +75,8 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should generate the same IDs for objects with the same properties but in a different order", () => {
-			const obj1 = { count: 0, name: "test" }
-			const obj2 = { name: "test", count: 0 }
+			const obj1 = { ...countNameObject }
+			const obj2 = { ...nameCountObject }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -46,8 +85,8 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should generate different IDs for objects with different property types", () => {
-			const obj1 = { count: 0, name: "test" }
-			const obj2 = { count: "0", name: "test" } // count is string instead of number
+			const obj1 = { ...countNameObject }
+			const obj2 = { ...countStringNameObject } // count is string instead of number
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -56,7 +95,7 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should maintain consistent IDs across multiple calls", () => {
-			const obj = { count: 0, name: "test" }
+			const obj = { ...countNameObject }
 
 			const id1 = generateStructureId(obj)
 			const id2 = generateStructureId(obj)
@@ -69,27 +108,9 @@ describe("Structure ID Generator", () => {
 
 	describe("Nested Objects", () => {
 		test("should generate the same ID for nested objects with identical structure", () => {
-			const obj1 = {
-				user: {
-					name: "John",
-					age: 30,
-					preferences: {
-						theme: "dark",
-						notifications: true,
-					},
-				},
-			}
+			const obj1 = { ...userJohnWithPreferences }
 
-			const obj2 = {
-				user: {
-					name: "Jane",
-					age: 25,
-					preferences: {
-						theme: "light",
-						notifications: false,
-					},
-				},
-			}
+			const obj2 = { ...userJaneWithPreferences }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -98,27 +119,9 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should generate different IDs for nested objects with different structures", () => {
-			const obj1 = {
-				user: {
-					name: "John",
-					age: 30,
-					preferences: {
-						theme: "dark",
-						notifications: true,
-					},
-				},
-			}
+			const obj1 = { ...userJohnWithPreferences }
 
-			const obj2 = {
-				user: {
-					name: "Jane",
-					age: 25,
-					preferences: {
-						theme: "light",
-						fontSize: 14, // different property
-					},
-				},
-			}
+			const obj2 = { ...userJaneWithFontSize }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -127,33 +130,9 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should handle deeply nested objects", () => {
-			const obj1 = {
-				level1: {
-					level2: {
-						level3: {
-							level4: {
-								level5: {
-									value: "deep",
-								},
-							},
-						},
-					},
-				},
-			}
+			const obj1 = { ...deepNestedObject }
 
-			const obj2 = {
-				level1: {
-					level2: {
-						level3: {
-							level4: {
-								level5: {
-									value: "also deep",
-								},
-							},
-						},
-					},
-				},
-			}
+			const obj2 = { ...deepNestedObjectAlternate }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -165,8 +144,8 @@ describe("Structure ID Generator", () => {
 
 	describe("Arrays", () => {
 		test("should generate the same ID for arrays with the same structure", () => {
-			const obj1 = { items: [1, 2, 3] }
-			const obj2 = { items: [4, 5, 6] }
+			const obj1 = { ...itemsArray123 }
+			const obj2 = { ...itemsArray456 }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -175,8 +154,8 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should generate different IDs for arrays with different lengths", () => {
-			const obj1 = { items: [1, 2, 3] }
-			const obj2 = { items: [1, 2, 3, 4] }
+			const obj1 = { ...itemsArray123 }
+			const obj2 = { ...itemsArray1234 }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -185,8 +164,8 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should generate different IDs for arrays with different element types", () => {
-			const obj1 = { items: [1, 2, 3] }
-			const obj2 = { items: [1, "2", 3] } // second element is a string
+			const obj1 = { ...itemsArray123 }
+			const obj2 = { ...itemsArrayMixedTypes } // second element is a string
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -195,19 +174,9 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should handle arrays of objects correctly", () => {
-			const obj1 = {
-				users: [
-					{ name: "John", age: 30 },
-					{ name: "Jane", age: 25 },
-				],
-			}
+			const obj1 = { ...usersArrayJohnJane }
 
-			const obj2 = {
-				users: [
-					{ name: "Alice", age: 35 },
-					{ name: "Bob", age: 40 },
-				],
-			}
+			const obj2 = { ...usersArrayAliceBob }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -215,20 +184,15 @@ describe("Structure ID Generator", () => {
 			expect(id1).toBe(id2)
 
 			// Different structure in array elements
-			const obj3 = {
-				users: [
-					{ name: "John", role: "admin" }, // different property
-					{ name: "Jane", age: 25 },
-				],
-			}
+			const obj3 = { ...usersArrayMixedStructure }
 
 			const id3 = generateStructureId(obj3)
 			expect(id1).not.toBe(id3)
 		})
 
 		test("should handle mixed arrays", () => {
-			const obj1 = { mixed: [1, "string", true, { a: 1 }] }
-			const obj2 = { mixed: [2, "text", false, { a: 42 }] }
+			const obj1 = { ...mixedArray1 }
+			const obj2 = { ...mixedArray2 }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -295,8 +259,8 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should handle object property order consistently", () => {
-			const obj1 = { a: 1, b: 2, c: 3 }
-			const obj2 = { c: 3, b: 2, a: 1 } // Different order
+			const obj1 = { ...abcObject }
+			const obj2 = { ...cbaObject } // Different order
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -305,8 +269,8 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should handle Date objects", () => {
-			const obj1 = { date: new Date("2023-01-01") }
-			const obj2 = { date: new Date("2024-02-02") }
+			const obj1 = { ...dateObject1 }
+			const obj2 = { ...dateObject2 }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -331,7 +295,7 @@ describe("Structure ID Generator", () => {
 	})
 	describe("getStructureInfo", () => {
 		test("should return correct id and level count for simple object", () => {
-			const obj = { count: 0, name: "test" }
+			const obj = { ...simpleObject }
 			const info = getStructureInfo(obj)
 
 			// ID should match what generateStructureId returns
@@ -342,19 +306,9 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should return correct level count for nested objects", () => {
-			const shallow = { a: 1, b: 2 }
-			const medium = { a: 1, b: { c: 2, d: 3 } }
-			const deep = {
-				level1: {
-					level2: {
-						level3: {
-							level4: {
-								level5: { value: "deep" },
-							},
-						},
-					},
-				},
-			}
+			const shallow = { ...shallowObject }
+			const medium = { ...mediumNestedObject }
+			const deep = { ...deepNestedObject }
 
 			const shallowInfo = getStructureInfo(shallow)
 			const mediumInfo = getStructureInfo(medium)
@@ -371,13 +325,8 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should handle arrays properly", () => {
-			const withArray = { items: [1, 2, 3] }
-			const withNestedArray = {
-				items: [
-					[1, 2],
-					[3, 4],
-				],
-			}
+			const withArray = { ...objectWithArray }
+			const withNestedArray = { ...nestedArrayObject }
 
 			const arrayInfo = getStructureInfo(withArray)
 			const nestedArrayInfo = getStructureInfo(withNestedArray)
@@ -408,8 +357,8 @@ describe("Structure ID Generator", () => {
 		let originalId2: string
 
 		beforeEach(() => {
-			const obj1 = { a: 1, b: "test" }
-			const obj2 = { complex: { nested: { value: 42 } } }
+			const obj1 = { ...testObjectA }
+			const obj2 = { ...complexNestedObject }
 
 			// Generate IDs before reset
 			originalId1 = generateStructureId(obj1)
@@ -420,7 +369,7 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should produce the SAME ID for a structure after reset", () => {
-			const obj = { a: 1, b: "test" }
+			const obj = { ...testObjectA }
 			const originalId = generateStructureId(obj)
 
 			resetState() // Reset the caches
@@ -432,8 +381,8 @@ describe("Structure ID Generator", () => {
 		})
 
 		test("should maintain consistency after reset", () => {
-			const obj1 = { a: 1, b: "test" }
-			const obj2 = { a: 2, b: "different" }
+			const obj1 = { ...testObjectA }
+			const obj2 = { ...testObjectB }
 
 			// Generate IDs after reset
 			const id1 = generateStructureId(obj1)
@@ -445,8 +394,8 @@ describe("Structure ID Generator", () => {
 
 		test("should reset to a predictable state", () => {
 			// After reset, structure ID generation should be consistent for similar structures
-			const simpleObj1 = { simple: true }
-			const simpleObj2 = { simple: false } // Different value, same structure
+			const simpleObj1 = { ...simpleTrueObject }
+			const simpleObj2 = { ...simpleFalseObject } // Different value, same structure
 
 			// Generate IDs
 			const id1 = generateStructureId(simpleObj1)
@@ -475,21 +424,21 @@ describe("Structure ID Generator", () => {
 			// while the L0 part includes the RESET_SEED, so we need to verify differently
 
 			// Two objects with same properties but different values (same structure)
-			const id1a = generateStructureId({ first: true })
-			const id1b = generateStructureId({ first: false })
+			const id1a = generateStructureId({ ...firstPropertyObject })
+			const id1b = generateStructureId({ ...firstPropertyFalseObject })
 			expect(id1a).toBe(id1b) // Same structure = same ID
 
 			// Object with different structure
-			const id2 = generateStructureId({ second: true })
+			const id2 = generateStructureId({ ...secondPropertyObject })
 
 			// We can't directly test L0 parts but we can verify consistent behavior
-			const id3 = generateStructureId({ second: false })
+			const id3 = generateStructureId({ ...secondPropertyFalseObject })
 			expect(id2).toBe(id3) // Same structure = same ID
 
 			// With the current implementation, we can only guarantee different IDs with collision handling on
 			setStructureIdConfig({ newIdOnCollision: true })
-			const newId1 = generateStructureId({ first: true })
-			const newId2 = generateStructureId({ second: true })
+			const newId1 = generateStructureId({ ...firstPropertyObject })
+			const newId2 = generateStructureId({ ...secondPropertyObject })
 			expect(newId1).not.toBe(newId2)
 			setStructureIdConfig({ newIdOnCollision: false })
 		})

@@ -6,6 +6,10 @@ import {
 	resetState,
 	setStructureIdConfig,
 } from "../src/index"
+import {
+	branchCoverageObject,
+	uniqueTestObject,
+} from "./object-definitions"
 
 // This test specifically targets line 452 in index.ts, which is the only remaining line not covered
 describe("Coverage for Line 452", () => {
@@ -29,7 +33,7 @@ describe("Coverage for Line 452", () => {
 
 		// Create a unique object that won't be in any caches
 		const uniqueKey = `unique-${Date.now()}-${Math.random()}`
-		const uniqueObj = { [uniqueKey]: "value" }
+		const uniqueObj = { ...uniqueTestObject, [uniqueKey]: "value" }
 
 		// Double-check it's not in the cache
 		expect(OBJECT_ID_CACHE.has(uniqueObj)).toBe(false)
@@ -55,8 +59,8 @@ describe("Coverage for Line 452", () => {
 		setStructureIdConfig({ newIdOnCollision: false })
 
 		// Create two structurally identical objects
-		const obj1 = { a: 1, b: 2 }
-		const obj2 = { a: 1, b: 2 } // Same structure but different reference
+		const obj1 = { ...branchCoverageObject }
+		const obj2 = { ...branchCoverageObject } // Same structure but different reference
 
 		// First, put obj1 in the cache by generating its ID
 		const id1 = generateStructureId(obj1)

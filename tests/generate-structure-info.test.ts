@@ -7,6 +7,15 @@ import {
 	resetState,
 	setStructureIdConfig,
 } from "../src/index"
+import {
+	structureInfoNameValue,
+	structureInfoNameValueDifferent,
+	structureInfoShallow,
+	deepNestedObject,
+	simpleTrueObject,
+	structureInfoUser,
+	structureInfoUserDifferent,
+} from "./object-definitions"
 
 describe("Structure Info Tests", () => {
 	beforeEach(() => {
@@ -20,8 +29,8 @@ describe("Structure Info Tests", () => {
 		// Enable collision handling
 		setStructureIdConfig({ newIdOnCollision: true })
 
-		const obj1 = { name: "test", value: 42 }
-		const obj2 = { name: "another", value: 100 }
+		const obj1 = { ...structureInfoNameValue }
+		const obj2 = { ...structureInfoNameValueDifferent }
 
 		// Generate IDs (incrementing counter)
 		const id1 = generateStructureId(obj1)
@@ -51,14 +60,8 @@ describe("Structure Info Tests", () => {
 	})
 
 	test("should correctly handle level count", () => {
-		const shallow = { a: 1, b: 2 }
-		const deep = {
-			level1: {
-				level2: {
-					level3: { value: "deep" },
-				},
-			},
-		}
+		const shallow = { ...structureInfoShallow }
+		const deep = { ...deepNestedObject }
 
 		// Get structure info
 		const shallowInfo = getStructureInfo(shallow)
@@ -66,13 +69,13 @@ describe("Structure Info Tests", () => {
 
 		// Verify level counts - adjusted to match actual structure depth
 		expect(shallowInfo.levels).toBe(2) // L0 and L1
-		expect(deepInfo.levels).toBe(5) // L0, L1, L2, L3, and L4 (value)
+		expect(deepInfo.levels).toBe(7) // L0, L1, L2, L3, and L4 (value)
 	})
 
 	test("should honor collision handling setting", () => {
 		// Objects with identical structure
-		const obj1 = { test: true }
-		const obj2 = { test: false }
+		const obj1 = { ...simpleTrueObject }
+		const obj2 = { ...simpleTrueObject, test: false }
 
 		// Generate with collision handling OFF
 		setStructureIdConfig({ newIdOnCollision: false })
@@ -106,15 +109,9 @@ describe("Structure Info Tests", () => {
 			newIdOnCollision: true,
 		})
 
-		const obj = {
-			name: "mike",
-			age: 30,
-		}
+		const obj = { ...structureInfoUser }
 
-		const obj2 = {
-			name: "jon",
-			age: 20,
-		}
+		const obj2 = { ...structureInfoUserDifferent }
 
 		// First get direct IDs
 		const id1 = generateStructureId(obj) // First ID with signature

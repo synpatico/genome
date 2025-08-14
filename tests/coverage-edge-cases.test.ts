@@ -5,6 +5,10 @@ import {
 	resetState,
 	setStructureIdConfig,
 } from "../src/index"
+import {
+	simpleTrueObject,
+	coverageFreshObject,
+} from "./object-definitions"
 
 describe("Special Coverage Cases", () => {
 	beforeEach(() => {
@@ -42,12 +46,12 @@ describe("Special Coverage Cases", () => {
 		setStructureIdConfig({ newIdOnCollision: true })
 
 		// Generate a few IDs to populate any counters
-		const simpleObj = { test: true }
+		const simpleObj = { ...simpleTrueObject }
 		generateStructureId(simpleObj)
 		generateStructureId(simpleObj)
 
 		// Now get structure info for same object type but different instance
-		const simpleObj2 = { test: false }
+		const simpleObj2 = { ...simpleTrueObject, test: false }
 		const infoSimple = getStructureInfo(simpleObj2)
 		expect(infoSimple.id).toBeTruthy()
 
@@ -55,7 +59,7 @@ describe("Special Coverage Cases", () => {
 		resetState()
 		setStructureIdConfig({ newIdOnCollision: true })
 
-		const freshObj = { fresh: true }
+		const freshObj = { ...coverageFreshObject }
 		const infoFresh = getStructureInfo(freshObj)
 		expect(infoFresh.id).toBeTruthy()
 	})
