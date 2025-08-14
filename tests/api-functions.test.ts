@@ -8,11 +8,28 @@ import {
 	STRUCTURE_INFO_CACHE,
 	setStructureIdConfig,
 } from "../src/index"
+import {
+	simpleObject,
+	shallowObject,
+	mediumNestedObject,
+	deepNestedObject,
+	objectWithArray,
+	objectWithNestedArray,
+	testObjectA,
+	testObjectB,
+	complexNestedObject,
+	simpleTrueObject,
+	simpleFalseObject,
+	firstPropertyObject,
+	firstPropertyFalseObject,
+	secondPropertyObject,
+	secondPropertyFalseObject,
+} from "./object-definitions"
 
 describe("API Functions", () => {
 	describe("getStructureInfo", () => {
 		test("should return correct id and level count for simple object", () => {
-			const obj = { count: 0, name: "test" }
+			const obj = { ...simpleObject }
 			const info = getStructureInfo(obj)
 
 			// ID should match what generateStructureId returns
@@ -23,19 +40,9 @@ describe("API Functions", () => {
 		})
 
 		test("should return correct level count for nested objects", () => {
-			const shallow = { a: 1, b: 2 }
-			const medium = { a: 1, b: { c: 2, d: 3 } }
-			const deep = {
-				level1: {
-					level2: {
-						level3: {
-							level4: {
-								level5: { value: "deep" },
-							},
-						},
-					},
-				},
-			}
+			const shallow = { ...shallowObject }
+			const medium = { ...mediumNestedObject }
+			const deep = { ...deepNestedObject }
 
 			const shallowInfo = getStructureInfo(shallow)
 			const mediumInfo = getStructureInfo(medium)
@@ -52,13 +59,8 @@ describe("API Functions", () => {
 		})
 
 		test("should handle arrays properly", () => {
-			const withArray = { items: [1, 2, 3] }
-			const withNestedArray = {
-				items: [
-					[1, 2],
-					[3, 4],
-				],
-			}
+			const withArray = { ...objectWithArray }
+			const withNestedArray = { ...objectWithNestedArray }
 
 			const arrayInfo = getStructureInfo(withArray)
 			const nestedArrayInfo = getStructureInfo(withNestedArray)
@@ -89,8 +91,8 @@ describe("API Functions", () => {
 		let originalId2: string
 
 		beforeEach(() => {
-			const obj1 = { a: 1, b: "test" }
-			const obj2 = { complex: { nested: { value: 42 } } }
+			const obj1 = { ...testObjectA }
+			const obj2 = { ...complexNestedObject }
 
 			// Generate IDs before reset
 			originalId1 = generateStructureId(obj1)
@@ -101,7 +103,7 @@ describe("API Functions", () => {
 		})
 
 		test("should produce the SAME ID for a structure after reset", () => {
-			const obj = { a: 1, b: "test" }
+			const obj = { ...testObjectA }
 			const originalId = generateStructureId(obj)
 
 			resetState() // Reset the caches
@@ -113,8 +115,8 @@ describe("API Functions", () => {
 		})
 
 		test("should maintain consistency after reset", () => {
-			const obj1 = { a: 1, b: "test" }
-			const obj2 = { a: 2, b: "different" }
+			const obj1 = { ...testObjectA }
+			const obj2 = { ...testObjectB }
 
 			// Generate IDs after reset
 			const id1 = generateStructureId(obj1)
@@ -126,8 +128,8 @@ describe("API Functions", () => {
 
 		test("should reset to a predictable state", () => {
 			// After reset, structure ID generation should be consistent for similar structures
-			const simpleObj1 = { simple: true }
-			const simpleObj2 = { simple: false } // Different value, same structure
+			const simpleObj1 = { ...simpleTrueObject }
+			const simpleObj2 = { ...simpleFalseObject } // Different value, same structure
 
 			// Generate IDs
 			const id1 = generateStructureId(simpleObj1)
@@ -156,21 +158,21 @@ describe("API Functions", () => {
 			// while the L0 part includes the RESET_SEED, so we need to verify differently
 
 			// Two objects with same properties but different values (same structure)
-			const id1a = generateStructureId({ first: true })
-			const id1b = generateStructureId({ first: false })
+			const id1a = generateStructureId({ ...firstPropertyObject })
+			const id1b = generateStructureId({ ...firstPropertyFalseObject })
 			expect(id1a).toBe(id1b) // Same structure = same ID
 
 			// Object with different structure
-			const id2 = generateStructureId({ second: true })
+			const id2 = generateStructureId({ ...secondPropertyObject })
 
 			// We can't directly test L0 parts but we can verify consistent behavior
-			const id3 = generateStructureId({ second: false })
+			const id3 = generateStructureId({ ...secondPropertyFalseObject })
 			expect(id2).toBe(id3) // Same structure = same ID
 
 			// With the current implementation, we can only guarantee different IDs with collision handling on
 			setStructureIdConfig({ newIdOnCollision: true })
-			const newId1 = generateStructureId({ first: true })
-			const newId2 = generateStructureId({ second: true })
+			const newId1 = generateStructureId({ ...firstPropertyObject })
+			const newId2 = generateStructureId({ ...secondPropertyObject })
 			expect(newId1).not.toBe(newId2)
 			setStructureIdConfig({ newIdOnCollision: false })
 		})

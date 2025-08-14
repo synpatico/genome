@@ -5,6 +5,21 @@ import {
 	resetState,
 	setStructureIdConfig,
 } from "../src/index"
+import {
+	johnObject,
+	janeObject,
+	value1Object,
+	value2Object,
+	value3Object,
+	value4Object,
+	value5Object,
+	complexUser1,
+	complexUser2,
+	testTrueObject,
+	testFalseObject,
+	testFirstString,
+	testSecondString,
+} from "./object-definitions"
 
 describe("Collision Handling", () => {
 	beforeEach(() => {
@@ -15,8 +30,8 @@ describe("Collision Handling", () => {
 	})
 
 	test("should generate same ID for identical structures when collision handling is disabled", () => {
-		const obj1 = { name: "John", age: 30 }
-		const obj2 = { name: "Jane", age: 25 }
+		const obj1 = { ...johnObject }
+		const obj2 = { ...janeObject }
 
 		const config = {
 			newIdOnCollision: false,
@@ -29,8 +44,8 @@ describe("Collision Handling", () => {
 	})
 
 	test("should generate different IDs for identical structures when collision handling is enabled", () => {
-		const obj1 = { name: "John", age: 30 }
-		const obj2 = { name: "Jane", age: 25 }
+		const obj1 = { ...johnObject }
+		const obj2 = { ...janeObject }
 
 		const config = {
 			newIdOnCollision: true,
@@ -66,11 +81,11 @@ describe("Collision Handling", () => {
 		}
 
 		// Generate multiple objects with the same structure
-		const obj1 = { value: 1 }
-		const obj2 = { value: 2 }
-		const obj3 = { value: 3 }
-		const obj4 = { value: 4 }
-		const obj5 = { value: 5 }
+		const obj1 = { ...value1Object }
+		const obj2 = { ...value2Object }
+		const obj3 = { ...value3Object }
+		const obj4 = { ...value4Object }
+		const obj5 = { ...value5Object }
 
 		const id1 = generateStructureId(obj1, config)
 		const id2 = generateStructureId(obj2, config)
@@ -110,27 +125,9 @@ describe("Collision Handling", () => {
 		}
 
 		// Complex object with nested structure
-		const complex1 = {
-			user: {
-				name: "User 1",
-				settings: {
-					theme: "dark",
-					notifications: true,
-				},
-			},
-			items: [1, 2, 3],
-		}
+		const complex1 = { ...complexUser1 }
 
-		const complex2 = {
-			user: {
-				name: "User 2",
-				settings: {
-					theme: "light",
-					notifications: false,
-				},
-			},
-			items: [4, 5, 6],
-		}
+		const complex2 = { ...complexUser2 }
 
 		const id1 = generateStructureId(complex1, config)
 		const id2 = generateStructureId(complex2, config)
@@ -162,8 +159,8 @@ describe("Collision Handling", () => {
 		}
 
 		// First sequence - generate two objects with same structure
-		const objA1 = { test: true }
-		const objA2 = { test: false }
+		const objA1 = { ...testTrueObject }
+		const objA2 = { ...testFalseObject }
 
 		const idA1 = generateStructureId(objA1, config)
 		const idA2 = generateStructureId(objA2, config)
@@ -176,8 +173,8 @@ describe("Collision Handling", () => {
 		resetState()
 
 		// Second sequence - generate two MORE objects with same structure
-		const objB1 = { test: "first" }
-		const objB2 = { test: "second" }
+		const objB1 = { ...testFirstString }
+		const objB2 = { ...testSecondString }
 
 		const idB1 = generateStructureId(objB1, config)
 		const idB2 = generateStructureId(objB2, config)
@@ -202,8 +199,8 @@ describe("Collision Handling", () => {
 			})
 
 			// Generate IDs for structurally identical objects
-			const obj1 = { test: true }
-			const obj2 = { test: false }
+			const obj1 = { ...testTrueObject }
+			const obj2 = { ...testFalseObject }
 
 			const id1 = generateStructureId(obj1) // No config passed
 			const id2 = generateStructureId(obj2) // No config passed
@@ -225,8 +222,8 @@ describe("Collision Handling", () => {
 			})
 
 			// Generate IDs for structurally identical objects
-			const obj1 = { test: true }
-			const obj2 = { test: false }
+			const obj1 = { ...testTrueObject }
+			const obj2 = { ...testFalseObject }
 
 			// First with global config (collision handling disabled)
 			const id1 = generateStructureId(obj1)

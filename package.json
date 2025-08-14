@@ -1,7 +1,7 @@
 {
 	"private": false,
 	"name": "@synpatico/genome",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Deterministic structure ID generation for JavaScript objects using hierarchical hashing and collision-resistant algorithms",
 	"author": "Michael Sweeney <overthemike@gmail.com>",
 	"type": "module",
@@ -26,7 +26,9 @@
 		"build:types": "tsc --emitDeclarationOnly --declarationMap",
 		"build:js": "tsup",
 		"clean": "rm -rf dist",
+		"lint": "biome",
 		"test": "vitest run",
+		"typecheck": "tsc --noEmit",
 		"prepublishOnly": "pnpm run build",
 		"bench": "vitest bench",
 		"coverage": "vitest run --coverage",
@@ -41,18 +43,19 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/synpatico/core.git",
+		"url": "https://github.com/synpatico/genome.git",
 		"directory": "packages/genome"
 	},
 	"bugs": {
-		"url": "https://github.com/synpatico/core/issues"
+		"url": "https://github.com/synpatico/gnome/issues"
 	},
-	"homepage": "https://github.com/synpatico/core/tree/main/packages/genome",
+	"homepage": "https://github.com/synpatico/genome",
 	"directories": {
 		"test": "tests"
 	},
 	"license": "MIT",
 	"devDependencies": {
+		"@biomejs/biome": "^2.1.4",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@types/benchmark": "^2.1.5",
 		"@types/node": "^22.13.14",

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test } from "vitest"
 import { generateStructureId, resetState, setStructureIdConfig } from "../src/index"
+import { testTrueObject, testFalseObject } from "./object-definitions"
 
 describe("Collision Handling Tests", () => {
 	beforeEach(() => {
@@ -13,8 +14,8 @@ describe("Collision Handling Tests", () => {
 		// First, with collision handling disabled
 		setStructureIdConfig({ newIdOnCollision: false })
 
-		const obj1 = { test: true }
-		const obj2 = { test: false } // Structurally identical
+		const obj1 = { ...testTrueObject }
+		const obj2 = { ...testFalseObject } // Structurally identical
 
 		const id1WithoutCollision = generateStructureId(obj1)
 		const id2WithoutCollision = generateStructureId(obj2)
@@ -28,8 +29,8 @@ describe("Collision Handling Tests", () => {
 		// Now with collision handling enabled
 		setStructureIdConfig({ newIdOnCollision: true })
 
-		const obj3 = { test: true }
-		const obj4 = { test: false } // Structurally identical
+		const obj3 = { ...testTrueObject }
+		const obj4 = { ...testFalseObject } // Structurally identical
 
 		const id1WithCollision = generateStructureId(obj3)
 		const id2WithCollision = generateStructureId(obj4)

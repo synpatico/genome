@@ -7,6 +7,12 @@ import {
 	resetState,
 	setStructureIdConfig,
 } from "../src"
+import {
+	abTestObject,
+	deeplyNestedValueObject,
+	arrayObject12345,
+	nestedObjectWithArray,
+} from "./object-definitions"
 
 describe("Compact ID Functions", () => {
 	// Reset state before each test
@@ -18,7 +24,7 @@ describe("Compact ID Functions", () => {
 
 	describe("getCompactId", () => {
 		test("should return a hashed version of the structure ID", () => {
-			const obj = { a: 1, b: "test" }
+			const obj = { ...abTestObject }
 			const result = getCompactId(obj)
 
 			// The output should be a non-empty string
@@ -27,8 +33,8 @@ describe("Compact ID Functions", () => {
 		})
 
 		test("should return consistent IDs for identical objects", () => {
-			const obj1 = { a: 1, b: "test" }
-			const obj2 = { a: 1, b: "test" }
+			const obj1 = { ...abTestObject }
+			const obj2 = { ...abTestObject }
 
 			const result1 = getCompactId(obj1)
 			const result2 = getCompactId(obj2)
@@ -38,8 +44,8 @@ describe("Compact ID Functions", () => {
 
 		test("should return different IDs for completely different objects", () => {
 			// Create completely different object structures
-			const obj1 = { deeply: { nested: { value: 1 } } }
-			const obj2 = { array: [1, 2, 3, 4, 5] }
+			const obj1 = { ...deeplyNestedValueObject }
+			const obj2 = { ...arrayObject12345 }
 
 			const result1 = getCompactId(obj1)
 			const result2 = getCompactId(obj2)
@@ -49,7 +55,7 @@ describe("Compact ID Functions", () => {
 		})
 
 		test("should respect newIdOnCollision configuration", () => {
-			const obj = { a: 1, b: "test" }
+			const obj = { ...abTestObject }
 
 			// First call with default config
 			resetState()
@@ -88,13 +94,7 @@ describe("Compact ID Functions", () => {
 		})
 
 		test("should handle nested objects and arrays", () => {
-			const obj = {
-				a: 1,
-				b: {
-					c: [1, 2, 3],
-					d: { e: "test" },
-				},
-			}
+			const obj = { ...nestedObjectWithArray }
 
 			const result = getCompactId(obj)
 
@@ -104,7 +104,7 @@ describe("Compact ID Functions", () => {
 
 		test("should pass custom config to underlying generateStructureId function", () => {
 			resetState()
-			const obj = { a: 1, b: "test" }
+			const obj = { ...abTestObject }
 
 			// First call with collision handling disabled
 			const result1 = getCompactId(obj, { newIdOnCollision: false })
@@ -123,7 +123,7 @@ describe("Compact ID Functions", () => {
 
 	describe("getCompactInfo", () => {
 		test("should return a compact ID along with level and collision info", () => {
-			const obj = { a: 1, b: "test" }
+			const obj = { ...abTestObject }
 			const result = getCompactInfo(obj)
 
 			expect(result).toHaveProperty("id")
@@ -135,8 +135,8 @@ describe("Compact ID Functions", () => {
 		})
 
 		test("should return consistent info for identical objects", () => {
-			const obj1 = { a: 1, b: "test" }
-			const obj2 = { a: 1, b: "test" }
+			const obj1 = { ...abTestObject }
+			const obj2 = { ...abTestObject }
 
 			const result1 = getCompactInfo(obj1)
 			const result2 = getCompactInfo(obj2)
@@ -148,8 +148,8 @@ describe("Compact ID Functions", () => {
 
 		test("should return different info for completely different objects", () => {
 			// Create completely different object structures
-			const obj1 = { deeply: { nested: { value: 1 } } }
-			const obj2 = { array: [1, 2, 3, 4, 5] }
+			const obj1 = { ...deeplyNestedValueObject }
+			const obj2 = { ...arrayObject12345 }
 
 			const result1 = getCompactInfo(obj1)
 			const result2 = getCompactInfo(obj2)
@@ -195,7 +195,7 @@ describe("Compact ID Functions", () => {
 		})
 
 		test("should maintain consistent IDs across multiple calls for the same object", () => {
-			const obj = { a: 1, b: "test" }
+			const obj = { ...abTestObject }
 
 			const result1 = getCompactInfo(obj)
 			const result2 = getCompactInfo(obj)

@@ -1,5 +1,11 @@
 import { describe, expect, test } from "vitest"
 import { generateStructureId } from "../src/index"
+import {
+	abcObject,
+	cbaObject,
+	dateObject1,
+	dateObject2,
+} from "./object-definitions"
 
 describe("Edge Cases", () => {
 	test("should handle primitive values", () => {
@@ -25,8 +31,8 @@ describe("Edge Cases", () => {
 	})
 
 	test("should handle object property order consistently", () => {
-		const obj1 = { a: 1, b: 2, c: 3 }
-		const obj2 = { c: 3, b: 2, a: 1 } // Different order
+		const obj1 = { ...abcObject }
+		const obj2 = { ...cbaObject } // Different order
 
 		const id1 = generateStructureId(obj1)
 		const id2 = generateStructureId(obj2)
@@ -35,8 +41,8 @@ describe("Edge Cases", () => {
 	})
 
 	test("should handle Date objects", () => {
-		const obj1 = { date: new Date("2023-01-01") }
-		const obj2 = { date: new Date("2024-02-02") }
+		const obj1 = { ...dateObject1 }
+		const obj2 = { ...dateObject2 }
 
 		const id1 = generateStructureId(obj1)
 		const id2 = generateStructureId(obj2)

@@ -1,10 +1,21 @@
 import { describe, expect, test } from "vitest"
 import { generateStructureId } from "../src/index"
+import {
+	itemsArray123,
+	itemsArray456,
+	itemsArray1234,
+	itemsArrayMixedTypes,
+	usersArrayJohnJane,
+	usersArrayAliceBob,
+	usersArrayMixedStructure,
+	mixedArray1,
+	mixedArray2,
+} from "./object-definitions"
 
 describe("Arrays", () => {
 	test("should generate the same ID for arrays with the same structure", () => {
-		const obj1 = { items: [1, 2, 3] }
-		const obj2 = { items: [4, 5, 6] }
+		const obj1 = { ...itemsArray123 }
+		const obj2 = { ...itemsArray456 }
 
 		const id1 = generateStructureId(obj1)
 		const id2 = generateStructureId(obj2)
@@ -13,8 +24,8 @@ describe("Arrays", () => {
 	})
 
 	test("should generate different IDs for arrays with different lengths", () => {
-		const obj1 = { items: [1, 2, 3] }
-		const obj2 = { items: [1, 2, 3, 4] }
+		const obj1 = { ...itemsArray123 }
+		const obj2 = { ...itemsArray1234 }
 
 		const id1 = generateStructureId(obj1)
 		const id2 = generateStructureId(obj2)
@@ -23,8 +34,8 @@ describe("Arrays", () => {
 	})
 
 	test("should generate different IDs for arrays with different element types", () => {
-		const obj1 = { items: [1, 2, 3] }
-		const obj2 = { items: [1, "2", 3] } // second element is a string
+		const obj1 = { ...itemsArray123 }
+		const obj2 = { ...itemsArrayMixedTypes } // second element is a string
 
 		const id1 = generateStructureId(obj1)
 		const id2 = generateStructureId(obj2)
@@ -33,19 +44,9 @@ describe("Arrays", () => {
 	})
 
 	test("should handle arrays of objects correctly", () => {
-		const obj1 = {
-			users: [
-				{ name: "John", age: 30 },
-				{ name: "Jane", age: 25 },
-			],
-		}
+		const obj1 = { ...usersArrayJohnJane }
 
-		const obj2 = {
-			users: [
-				{ name: "Alice", age: 35 },
-				{ name: "Bob", age: 40 },
-			],
-		}
+		const obj2 = { ...usersArrayAliceBob }
 
 		const id1 = generateStructureId(obj1)
 		const id2 = generateStructureId(obj2)
@@ -53,20 +54,15 @@ describe("Arrays", () => {
 		expect(id1).toBe(id2)
 
 		// Different structure in array elements
-		const obj3 = {
-			users: [
-				{ name: "John", role: "admin" }, // different property
-				{ name: "Jane", age: 25 },
-			],
-		}
+		const obj3 = { ...usersArrayMixedStructure }
 
 		const id3 = generateStructureId(obj3)
 		expect(id1).not.toBe(id3)
 	})
 
 	test("should handle mixed arrays", () => {
-		const obj1 = { mixed: [1, "string", true, { a: 1 }] }
-		const obj2 = { mixed: [2, "text", false, { a: 42 }] }
+		const obj1 = { ...mixedArray1 }
+		const obj2 = { ...mixedArray2 }
 
 		const id1 = generateStructureId(obj1)
 		const id2 = generateStructureId(obj2)

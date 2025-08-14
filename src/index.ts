@@ -552,12 +552,12 @@ export interface StructureState {
  */
 export function exportStructureState(): StructureState {
 	const keyMap: Record<string, string> = {}
-	for (const [key, value] of Object.entries(GLOBAL_KEY_MAP)) {
+	for (const [key, value] of GLOBAL_KEY_MAP.entries()) {
 		keyMap[key] = value.toString()
 	}
 
 	const collisionCounters: Record<string, number> = {}
-	for (const [signature, count] of Object.entries(STRUCTURE_HASH_COUNTER)) {
+	for (const [signature, count] of STRUCTURE_HASH_COUNTER.entries()) {
 		collisionCounters[signature] = count
 	}
 

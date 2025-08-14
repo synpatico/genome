@@ -1,5 +1,15 @@
 import { beforeEach, describe, expect, test } from "vitest"
 import { generateStructureId, resetState } from "../src/index"
+import {
+	proxyTargetBasic,
+	proxyTargetDifferent,
+	proxyTargetAlternate,
+	valueTargetObject,
+	symbolTestObject,
+	symbolValueObject,
+	customClassWrapper,
+	instanceWrapper,
+} from "./object-definitions"
 
 describe("Complex Data Structure Tests", () => {
 	beforeEach(() => {
@@ -64,11 +74,11 @@ describe("Complex Data Structure Tests", () => {
 
 	describe("Proxy Objects", () => {
 		test("should handle Proxy objects", () => {
-			const target1 = { count: 42, name: "original" }
+			const target1 = { ...proxyTargetBasic }
 			const handler1 = {}
 			const proxy1 = new Proxy(target1, handler1)
 
-			const target2 = { count: 0, name: "different" }
+			const target2 = { ...proxyTargetDifferent }
 			const handler2 = {}
 			const proxy2 = new Proxy(target2, handler2)
 
@@ -84,10 +94,10 @@ describe("Complex Data Structure Tests", () => {
 		})
 
 		test("should handle Proxy objects with different structures", () => {
-			const target1 = { count: 42, name: "original" }
+			const target1 = { ...proxyTargetBasic }
 			const proxy1 = new Proxy(target1, {})
 
-			const target2 = { count: 42, title: "different" } // different property
+			const target2 = { ...proxyTargetAlternate } // different property
 			const proxy2 = new Proxy(target2, {})
 
 			const obj1 = { proxyData: proxy1 }
@@ -101,7 +111,7 @@ describe("Complex Data Structure Tests", () => {
 		})
 
 		test("should handle Proxy objects with custom handlers", () => {
-			const target = { value: 42 }
+			const target = { ...valueTargetObject }
 
 			// Proxy with get trap
 			const handler1 = {
@@ -138,7 +148,7 @@ describe("Complex Data Structure Tests", () => {
 			const symbolKey2 = Symbol("key2")
 
 			const obj1: Record<string | symbol, unknown> = {
-				normalKey: "value",
+				...symbolTestObject,
 				[symbolKey1]: "symbol value",
 			}
 
@@ -159,8 +169,8 @@ describe("Complex Data Structure Tests", () => {
 			const sym1 = Symbol("description1")
 			const sym2 = Symbol("description2")
 
-			const obj1 = { id: sym1, name: "test" }
-			const obj2 = { id: sym2, name: "different" }
+			const obj1 = { ...symbolValueObject, id: sym1 }
+			const obj2 = { ...symbolValueObject, id: sym2, name: "different" }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -187,8 +197,8 @@ describe("Complex Data Structure Tests", () => {
 			const custom1 = new CustomClass(10)
 			const custom2 = new CustomClass(20)
 
-			const obj1 = { custom: custom1, name: "test" }
-			const obj2 = { custom: custom2, name: "different" }
+			const obj1 = { ...customClassWrapper, custom: custom1 }
+			const obj2 = { ...customClassWrapper, custom: custom2, name: "different" }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -219,8 +229,8 @@ describe("Complex Data Structure Tests", () => {
 			const child1 = new Child("parent1", 10)
 			const child2 = new Child("parent2", 20)
 
-			const obj1 = { instance: child1 }
-			const obj2 = { instance: child2 }
+			const obj1 = { ...instanceWrapper, instance: child1 }
+			const obj2 = { ...instanceWrapper, instance: child2 }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)

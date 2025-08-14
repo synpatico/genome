@@ -1,29 +1,18 @@
 import { describe, expect, test } from "vitest"
 import { generateStructureId } from "../src/index"
+import {
+	userJohnWithPreferences,
+	userJaneWithPreferences,
+	userJaneWithFontSize,
+	deepNestedObject,
+	deepNestedObjectAlternate,
+} from "./object-definitions"
 
 describe("Nested Objects", () => {
 	test("should generate the same ID for nested objects with identical structure", () => {
-		const obj1 = {
-			user: {
-				name: "John",
-				age: 30,
-				preferences: {
-					theme: "dark",
-					notifications: true,
-				},
-			},
-		}
+		const obj1 = { ...userJohnWithPreferences }
 
-		const obj2 = {
-			user: {
-				name: "Jane",
-				age: 25,
-				preferences: {
-					theme: "light",
-					notifications: false,
-				},
-			},
-		}
+		const obj2 = { ...userJaneWithPreferences }
 
 		const id1 = generateStructureId(obj1)
 		const id2 = generateStructureId(obj2)
@@ -32,27 +21,9 @@ describe("Nested Objects", () => {
 	})
 
 	test("should generate different IDs for nested objects with different structures", () => {
-		const obj1 = {
-			user: {
-				name: "John",
-				age: 30,
-				preferences: {
-					theme: "dark",
-					notifications: true,
-				},
-			},
-		}
+		const obj1 = { ...userJohnWithPreferences }
 
-		const obj2 = {
-			user: {
-				name: "Jane",
-				age: 25,
-				preferences: {
-					theme: "light",
-					fontSize: 14, // different property
-				},
-			},
-		}
+		const obj2 = { ...userJaneWithFontSize }
 
 		const id1 = generateStructureId(obj1)
 		const id2 = generateStructureId(obj2)
@@ -61,33 +32,9 @@ describe("Nested Objects", () => {
 	})
 
 	test("should handle deeply nested objects", () => {
-		const obj1 = {
-			level1: {
-				level2: {
-					level3: {
-						level4: {
-							level5: {
-								value: "deep",
-							},
-						},
-					},
-				},
-			},
-		}
+		const obj1 = { ...deepNestedObject }
 
-		const obj2 = {
-			level1: {
-				level2: {
-					level3: {
-						level4: {
-							level5: {
-								value: "also deep",
-							},
-						},
-					},
-				},
-			},
-		}
+		const obj2 = { ...deepNestedObjectAlternate }
 
 		const id1 = generateStructureId(obj1)
 		const id2 = generateStructureId(obj2)

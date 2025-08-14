@@ -1,5 +1,13 @@
 import { beforeEach, describe, expect, test } from "vitest"
 import { generateStructureId, resetState } from "../src/index"
+import {
+	exoticWrapper,
+	typedArrayWrapper,
+	bufferWrapper,
+	regexWrapper,
+	promiseWrapper,
+	complexMixedStructure,
+} from "./object-definitions"
 
 describe("Exotic Objects Tests", () => {
 	beforeEach(() => {
@@ -25,12 +33,13 @@ describe("Exotic Objects Tests", () => {
 			weakSet2.add(key2)
 
 			const obj1 = {
+				...exoticWrapper,
 				weakMap: weakMap1,
 				weakSet: weakSet1,
-				name: "test",
 			}
 
 			const obj2 = {
+				...exoticWrapper,
 				weakMap: weakMap2,
 				weakSet: weakSet2,
 				name: "different",
@@ -51,10 +60,10 @@ describe("Exotic Objects Tests", () => {
 			const uint8Array1 = new Uint8Array([1, 2, 3])
 			const float32Array1 = new Float32Array([1.1, 2.2, 3.3])
 
-			const obj1 = { typedArray: int8Array1, name: "test" }
-			const obj2 = { typedArray: int8Array2, name: "different" }
-			const obj3 = { typedArray: uint8Array1, name: "test" }
-			const obj4 = { typedArray: float32Array1, name: "test" }
+			const obj1 = { ...typedArrayWrapper, typedArray: int8Array1 }
+			const obj2 = { ...typedArrayWrapper, typedArray: int8Array2, name: "different" }
+			const obj3 = { ...typedArrayWrapper, typedArray: uint8Array1 }
+			const obj4 = { ...typedArrayWrapper, typedArray: float32Array1 }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -80,8 +89,8 @@ describe("Exotic Objects Tests", () => {
 			const view2 = new DataView(buffer2)
 			view2.setInt32(0, 100)
 
-			const obj1 = { buffer: buffer1, view: view1, name: "test" }
-			const obj2 = { buffer: buffer2, view: view2, name: "different" }
+			const obj1 = { ...bufferWrapper, buffer: buffer1, view: view1 }
+			const obj2 = { ...bufferWrapper, buffer: buffer2, view: view2, name: "different" }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -95,8 +104,8 @@ describe("Exotic Objects Tests", () => {
 			const regex1 = /test/g
 			const regex2 = /different/i
 
-			const obj1 = { pattern: regex1, name: "test" }
-			const obj2 = { pattern: regex2, name: "different" }
+			const obj1 = { ...regexWrapper, pattern: regex1 }
+			const obj2 = { ...regexWrapper, pattern: regex2, name: "different" }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -110,8 +119,8 @@ describe("Exotic Objects Tests", () => {
 			const promise1 = Promise.resolve(42)
 			const promise2 = Promise.resolve("string")
 
-			const obj1 = { future: promise1, name: "test" }
-			const obj2 = { future: promise2, name: "different" }
+			const obj1 = { ...promiseWrapper, future: promise1 }
+			const obj2 = { ...promiseWrapper, future: promise2, name: "different" }
 
 			const id1 = generateStructureId(obj1)
 			const id2 = generateStructureId(obj2)
@@ -131,7 +140,7 @@ describe("Exotic Objects Tests", () => {
 			const proxy = new Proxy({}, {})
 
 			const complex1: Record<string | symbol, unknown> = {
-				regularKey: "value",
+				...complexMixedStructure,
 				[symbolKey]: "symbol value",
 				mapValue: map,
 				setValue: set,
@@ -144,6 +153,7 @@ describe("Exotic Objects Tests", () => {
 			}
 
 			const complex2: Record<string | symbol, unknown> = {
+				...complexMixedStructure,
 				regularKey: "different",
 				[symbolKey]: "different symbol value",
 				mapValue: new Map().set("different", "map"),
