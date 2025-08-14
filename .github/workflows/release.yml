@@ -35,24 +35,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       
-      - name: Check version doesn't exist on npm
-        run: |
-          PACKAGE_NAME=$(node -p "require('./package.json').name")
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          
-          echo "Checking if $PACKAGE_NAME@$PACKAGE_VERSION already exists on npm..."
-          
-          if npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>/dev/null; then
-            echo "❌ Version $PACKAGE_VERSION already exists on npm!"
-            echo "Please update the version in package.json before publishing."
-            exit 1
-          else
-            echo "✅ Version $PACKAGE_VERSION is available for publishing."
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Build packages
+        run: pnpm build
       
-      - name: Publish Release
-        run: npm publish --provenance --access public
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm release
+          title: 'chore: release package'
+          commit: 'chore: release package'
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
