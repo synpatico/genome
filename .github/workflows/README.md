@@ -3,7 +3,6 @@
 This repository uses GitHub Actions for continuous integration and automated releases.
 
 ## Workflows
-
 ### CI Workflow (`ci.yml`)
 Runs on every push and pull request to ensure code quality:
 - **Testing**: Runs tests on Node.js 18.x and 20.x
