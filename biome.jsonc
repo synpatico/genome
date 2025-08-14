@@ -35,17 +35,12 @@
 			"suspicious": {
 				"noExplicitAny": "warn"
 			}
-		}
+		},
+		"includes": ["!**/dist/**", "!**/node_modules/**", "!**/examples/**"]
 	},
 	"overrides": [
 		{
-			"includes": [
-				"**/tests/**",
-				"**/*.bench.ts",
-				"**/*.test.ts",
-				"**/*.spec.ts",
-				"**/tests/**"
-			],
+			"includes": ["**/tests/**", "**/*.bench.ts", "**/*.test.ts", "**/*.spec.ts", "**/tests/**"],
 			"linter": {
 				"rules": {
 					"suspicious": {
