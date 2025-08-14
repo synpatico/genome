@@ -92,8 +92,5 @@
 		"unique",
 		"synpatico",
 		"type"
-	],
-	"dependencies": {
-		"@changesets/cli": "^2.29.5"
-	}
+	]
 }
