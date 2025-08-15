@@ -251,15 +251,6 @@ function assignUniqueIds<T>(objects: T[]): Map<T, string> {
   return idMap;
 }
 ```
-
-### When not to use
-
-While `genome` is powerful, it's not suitable for every scenario:
-
-- When you need to identify objects based on their content/values rather than structure
-- For very large objects where performance is critical (the deep traversal has some overhead)
-- When you specifically need to track object identity (same instance) rather than structure
-
 ### Benefits Over Manual Key Management
 
 - Automatic: No need to manually specify and maintain string keys
